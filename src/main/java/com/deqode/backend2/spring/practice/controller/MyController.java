@@ -24,8 +24,6 @@ public class MyController {
         return this.studentRepository.findAll();
     }
 
-//    @GetMapping("/")
-//    public ResponseEntity<?> getStudents(){
-//        return ResponseEntity.ok(this.studentRepository.findAll());
-//    }
+    //new branch created
+
 }
