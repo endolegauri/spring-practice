@@ -11,8 +11,10 @@ import java.util.List;
 @RestController
 @RequestMapping("/student")
 public class MyController {
+
     @Autowired
     private StudentRepository studentRepository;
+
     @PostMapping("/")
     public ResponseEntity<?> addStudent(@RequestBody Student student){
         Student save = this.studentRepository.save(student);
@@ -25,5 +27,22 @@ public class MyController {
     }
 
     //new branch created
+
+    @PutMapping("/{id}")
+    public ResponseEntity<?> updateStudent(@RequestBody Student student ,@PathVariable int id){
+
+        Student studentToUpdate = this.studentRepository.findById(id).get();
+        studentToUpdate.setName(student.getName());
+        studentToUpdate.setCity(student.getCity());
+        studentToUpdate.setEmail(student.getEmail());
+        Student update = this.studentRepository.save(student);
+        return ResponseEntity.ok(update);
+    }
+
+    @DeleteMapping("/{id}")
+    public String  deleteStudent(@PathVariable("id") int id){
+        this.studentRepository.deleteById(id);
+        return id +"th Student deleted" ;
+    }
 
 }
