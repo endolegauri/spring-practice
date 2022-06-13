@@ -8,4 +8,8 @@ public interface MyService {
     Student saveStudent(Student student);
 
     List<Student> getAllStudent();
+
+    Student updateStudent(Student student, int id);
+
+    void deleteStudent(int id);
 }
