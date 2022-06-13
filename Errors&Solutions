@@ -1,0 +1,24 @@
+ERROR 1
+
+Error starting ApplicationContext. To display the conditions report re-run your application with 'debug' enabled.
+2022-06-10 17:22:43.224 ERROR 19894 --- [  restartedMain] o.s.b.d.LoggingFailureAnalysisReporter   :
+
+***************************
+APPLICATION FAILED TO START
+***************************
+
+Description:
+
+Field myService in com.deqode.backend2.spring.practice.controller.MyController required a bean of type 'com.deqode.backend2.spring.practice.service.MyService' that could not be found.
+
+The injection point has the following annotations:
+	- @org.springframework.beans.factory.annotation.Autowired(required=true)
+
+
+Action:
+
+Consider defining a bean of type 'com.deqode.backend2.spring.practice.service.MyService' in your configuration.
+
+--- forgot to add @Service :| ;-)
+
+ERROR 2
