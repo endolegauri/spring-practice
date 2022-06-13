@@ -26,6 +26,18 @@ public class MyController {
         return this.myService.getAllStudent();
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<?> updateStudent(@RequestBody Student student ,@PathVariable("id") int id){
+        Student update = this.myService.updateStudent(student,id);
+        return ResponseEntity.ok(update);
+    }
+
+    @DeleteMapping("/{id}")
+    public String deleteStudent(@PathVariable("id") int id){
+        this.myService.deleteStudent(id);
+        return id+"th Student deleted successfully";
+    }
+
 
 
 
