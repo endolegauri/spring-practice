@@ -29,6 +29,7 @@ public class MyServiceImpl implements MyService{
         update.setName(student.getName());
         update.setEmail(student.getEmail());
         update.setCity(student.getCity());
+        update.setCity(update.getCity());
         update = this.studentRepository.save(update);
         return update;
     }

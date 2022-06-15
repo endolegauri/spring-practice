@@ -1,9 +1,18 @@
 package com.deqode.backend2.spring.practice.controller;
 
+import com.deqode.backend2.spring.practice.helper.JwtUtil;
 import com.deqode.backend2.spring.practice.models.Student;
+import com.deqode.backend2.spring.practice.models.StudentJwtRequest;
+import com.deqode.backend2.spring.practice.models.StudentJwtResponse;
 import com.deqode.backend2.spring.practice.service.MyService;
+import com.deqode.backend2.spring.practice.service.MyUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -38,40 +47,41 @@ public class MyController {
         return id+"th Student deleted successfully";
     }
 
+    @GetMapping("/welcome")
+    public String welcome(){
+        return "successful login";
+    }
 
+    //////////////////////////////////////// JWT /////////////////////////////////////////////////
 
+    @Autowired
+    private AuthenticationManager authenticationManager;
 
+    @Autowired
+    private MyUserDetailsService myUserDetailsService;
 
+    @Autowired
+    private JwtUtil jwtUtil;
 
+    @PostMapping("/token")
+    public ResponseEntity<?> generateToken(@RequestBody StudentJwtRequest student) throws Exception {
+        System.out.println(student);
+        try
+        {
+            this.authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(student.getUsername(),student.getPassword()));
+        }catch (UsernameNotFoundException e){
+            e.printStackTrace();
+            throw new Exception("User Not found !!!");
+        }catch (BadCredentialsException e){
+            e.printStackTrace();
+            throw new Exception("Bad Credentials !!!");
+        }
 
-//    @PostMapping("/")
-//    public ResponseEntity<?> addStudent(@RequestBody Student student){
-//        Student save = this.studentRepository.save(student);
-//        return ResponseEntity.ok(save);
-//    }
-//
-//    @GetMapping("/")
-//    public List<Student> getStudents(){
-//        return this.studentRepository.getAllStudents();
-//    }
-//
-//    //new branch created
-//
-//    @PutMapping("/{id}")
-//    public ResponseEntity<?> updateStudent(@RequestBody Student student ,@PathVariable int id){
-//
-//        Student studentToUpdate = this.studentRepository.findById(id).get();
-//        studentToUpdate.setName(student.getName());
-//        studentToUpdate.setCity(student.getCity());
-//        studentToUpdate.setEmail(student.getEmail());
-//        Student update = this.studentRepository.save(student);
-//        return ResponseEntity.ok(update);
-//    }
-//
-//    @DeleteMapping("/{id}")
-//    public String  deleteStudent(@PathVariable("id") int id){
-//        this.studentRepository.deleteById(id);
-//        return id +"th Student deleted" ;
-//    }
+        UserDetails userDetails = this.myUserDetailsService.loadUserByUsername(student.getUsername());
+
+        String token = this.jwtUtil.generateToken(userDetails);
+        System.out.println("JWT: "+token);
+        return ResponseEntity.ok(new StudentJwtResponse(token));
+    }
 
 }
